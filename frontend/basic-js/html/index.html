@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>아기사자 프로필 목록</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <!-- 상단 컨트롤 -->
+    <div class="controls">
+        <button class="btn" id="toggleFormBtn">아기 사자 추가</button>
+        <button class="btn" id="deleteLastBtn">마지막 아기 사자 삭제</button>
+        <span class="total-count" id="totalCount">총 0명</span>
+    </div>
+
+    <!-- 추가 폼 -->
+    <div class="form-section" id="formSection">
+        <div class="form-grid">
+            <!-- 이름 / 파트 → 2열 -->
+            <div class="form-group">
+                <label for="inputName">이름</label>
+                <input type="text" id="inputName" placeholder="예: 홍아기사자">
+                <span class="warning-msg" id="warnName">이름을 입력해 주세요.</span>
+            </div>
+            <div class="form-group">
+                <label for="inputPart">파트</label>
+                <select id="inputPart">
+                    <option value="Frontend">Frontend</option>
+                    <option value="Backend">Backend</option>
+                    <option value="Design">Design</option>
+                </select>
+            </div>
+
+            <!-- 관심 기술 → 전체 너비 -->
+            <div class="form-group full">
+                <label for="inputSkills">관심 기술 (쉼표로 구분)</label>
+                <input type="text" id="inputSkills" placeholder="예: JavaScript, React, HTML/CSS">
+                <span class="warning-msg" id="warnSkills">관심 기술을 입력해 주세요.</span>
+            </div>
+
+            <!-- 한 줄 소개 → 전체 너비 -->
+            <div class="form-group full">
+                <label for="inputIntro">한 줄 소개 (요약 카드)</label>
+                <input type="text" id="inputIntro" placeholder="예: 3주차 DOM 조작 연습 중!">
+                <span class="warning-msg" id="warnIntro">한 줄 소개를 입력해 주세요.</span>
+            </div>
+
+            <!-- 자기소개 → 전체 너비 -->
+            <div class="form-group full">
+                <label for="inputBio">자기소개 (상세 카드)</label>
+                <textarea id="inputBio" placeholder="예: HTML/CSS로 구조를 만들고, JS로 데이터를 바꾸면 화면이 바뀌는 경험을 하고 있습니다."></textarea>
+                <span class="warning-msg" id="warnBio">자기소개를 입력해 주세요.</span>
+            </div>
+
+            <!-- Email / Phone → 2열 -->
+            <div class="form-group">
+                <label for="inputEmail">Email</label>
+                <input type="email" id="inputEmail" placeholder="예: lion@example.com">
+                <span class="warning-msg" id="warnEmail">이메일을 입력해 주세요.</span>
+            </div>
+            <div class="form-group">
+                <label for="inputPhone">Phone</label>
+                <input type="text" id="inputPhone" placeholder="예: 010-1234-5678">
+                <span class="warning-msg" id="warnPhone">전화번호를 입력해 주세요.</span>
+            </div>
+
+            <!-- Website → 전체 너비 -->
+            <div class="form-group full">
+                <label for="inputWebsite">Website</label>
+                <input type="url" id="inputWebsite" placeholder="예: https://example.com">
+                <span class="warning-msg" id="warnWebsite">URL을 입력해 주세요.</span>
+            </div>
+
+            <!-- 한 마디 → 전체 너비 -->
+            <div class="form-group full">
+                <label for="inputQuote">한 마디</label>
+                <input type="text" id="inputQuote" placeholder="예: 데이터 바꾸면 화면도 바뀐다!">
+                <span class="warning-msg" id="warnQuote">한 마디를 입력해 주세요.</span>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button class="btn-submit" id="submitBtn">추가하기</button>
+            <button class="btn-cancel" id="cancelBtn">취소</button>
+        </div>
+    </div>
+
+    <!-- 요약 카드 그리드 -->
+    <section class="summary-section" id="summarySection">
+        <div class="summary-card my-card" data-id="0">
+            <div class="image-container">
+                <img src="https://images.unsplash.com/photo-1555952517-2e8e729e0b44?w=400" alt="박용준 사진">
+                <span class="badge">Spring Boot</span>
+            </div>
+            <div class="summary-info">
+                <p class="name">박용준</p>
+                <p class="role">Backend</p>
+                <p class="intro">고가용성 설계를 추구합니다.</p>
+            </div>
+        </div>
+        <div class="summary-card" data-id="1">
+            <div class="image-container">
+                <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400" alt="박아기사자 사진">
+                <span class="badge">Spring</span>
+            </div>
+            <div class="summary-info">
+                <p class="name">박아기사자</p>
+                <p class="role">Backend</p>
+                <p class="intro">안정적인 서버 구조에 관심이 많습니다.</p>
+            </div>
+        </div>
+        <div class="summary-card" data-id="2">
+            <div class="image-container">
+                <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=400" alt="이아기사자 사진">
+                <span class="badge">Figma</span>
+            </div>
+            <div class="summary-info">
+                <p class="name">이아기사자</p>
+                <p class="role">Design</p>
+                <p class="intro">사용자 관점에서 디자인을 고민합니다.</p>
+            </div>
+        </div>
+        <div class="summary-card" data-id="3">
+            <div class="image-container">
+                <img src="https://images.unsplash.com/photo-1512428559087-560fa5ceab42?w=400" alt="최아기사자 사진">
+                <span class="badge">TypeScript</span>
+            </div>
+            <div class="summary-info">
+                <p class="name">최아기사자</p>
+                <p class="role">Frontend</p>
+                <p class="intro">컴포넌트 단위 설계에 흥미가 있습니다.</p>
+            </div>
+        </div>
+    </section>
+
+    <hr class="divider">
+
+    <!-- 상세 카드 -->
+    <section class="detail-section" id="detailSection">
+        <div class="detail-card" data-id="0">
+            <h2 class="detail-name">박용준</h2>
+            <p class="detail-role">Backend</p>
+            <p class="detail-track">LION TRACK</p>
+            <div class="detail-content">
+                <h3>자기소개</h3>
+                <p>Backend &amp; DevOps에 관심이 많은 주니어 개발자입니다.</p>
+                <h3>관심 기술</h3>
+                <ul>
+                    <li>Spring Boot</li>
+                    <li>Redis</li>
+                    <li>Terraform (예정)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="detail-card" data-id="1">
+            <h2 class="detail-name">박아기사자</h2>
+            <p class="detail-role">Backend</p>
+            <p class="detail-track">LION TRACK</p>
+            <div class="detail-content">
+                <h3>자기소개</h3>
+                <p>서버 개발을 배우며 데이터가 오가는 흐름에 관심을 가지게 되었습니다.</p>
+                <h3>관심 기술</h3>
+                <ul>
+                    <li>Spring</li>
+                    <li>Java</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="detail-card" data-id="2">
+            <h2 class="detail-name">이아기사자</h2>
+            <p class="detail-role">Design</p>
+            <p class="detail-track">LION TRACK</p>
+            <div class="detail-content">
+                <h3>자기소개</h3>
+                <p>사용자 관점에서 디자인을 고민합니다.</p>
+                <h3>관심 기술</h3>
+                <ul>
+                    <li>Figma</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="detail-card" data-id="3">
+            <h2 class="detail-name">최아기사자</h2>
+            <p class="detail-role">Frontend</p>
+            <p class="detail-track">LION TRACK</p>
+            <div class="detail-content">
+                <h3>자기소개</h3>
+                <p>컴포넌트 단위 설계에 흥미가 있습니다.</p>
+                <h3>관심 기술</h3>
+                <ul>
+                    <li>TypeScript</li>
+                    <li>JavaScript</li>
+                    <li>React</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+</div>
+<script type="text/javascript" src="../js/script.js"></script>
+</body>
+</html>
