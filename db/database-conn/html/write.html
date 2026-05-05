@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>글쓰기</title>
+  <link rel="stylesheet" href="../css/write.css">
+</head>
+<body>
+<div class="container">
+  <header>
+    <button class="btn-cancel" onclick="history.back()">← 뒤로</button>
+    <h1 id="page-title">글쓰기</h1>
+  </header>
+  <div class="card">
+    <input type="text" id="title" placeholder="제목을 입력하세요" />
+    <textarea id="content" placeholder="내용을 입력하세요"></textarea>
+    <div class="actions">
+      <button class="btn-cancel" onclick="history.back()">취소</button>
+      <button class="btn-primary" onclick="handleSubmit()">등록</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { getUser } from '../js/auth.js'
+  import { createPost, updatePost, getPost } from '../js/posts.js'
+
+  const user = await getUser()
+  if (!user) { location.href = 'index.html' }
+
+  // 수정 모드 확인 (?id=123 이면 수정)
+  const params = new URLSearchParams(location.search)
+  const editId = params.get('id')
+
+  if (editId) {
+    document.getElementById('page-title').textContent = '글 수정'
+    document.querySelector('.btn-primary').textContent = '수정'
+    const post = await getPost(editId)
+    document.getElementById('title').value = post.title
+    document.getElementById('content').value = post.content
+  }
+
+  window.handleSubmit = async () => {
+    const title = document.getElementById('title').value.trim()
+    const content = document.getElementById('content').value.trim()
+    if (!title || !content) return alert('제목과 내용을 입력하세요')
+
+    try {
+      if (editId) {
+        await updatePost(editId, title, content)
+        location.href = `post.html?id=${editId}`
+      } else {
+        const post = await createPost(title, content)
+        location.href = `post.html?id=${post.id}`
+      }
+    } catch (e) {
+      alert('오류: ' + e.message)
+    }
+  }
+</script>
+</body>
+</html>
