@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>게시글</title>
+  <link rel="stylesheet" href="../css/post.css">
+</head>
+<body>
+<div class="container">
+  <header>
+    <button class="btn-back" onclick="location.href='board.html'">← 목록</button>
+  </header>
+  <div class="card">
+    <div class="post-title" id="post-title">불러오는 중...</div>
+    <div class="post-meta" id="post-meta"></div>
+    <div class="post-content" id="post-content"></div>
+    <div class="actions" id="post-actions" style="display:none">
+      <button class="btn-edit" id="btn-edit">수정</button>
+      <button class="btn-delete" onclick="handleDelete()">삭제</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { getUser } from '../js/auth.js'
+  import { getPost, deletePost } from '../js/posts.js'
+
+  const params = new URLSearchParams(location.search)
+  const id = params.get('id')
+  if (!id) location.href = 'board.html'
+
+  const [user, post] = await Promise.all([getUser(), getPost(id)])
+
+  document.getElementById('post-title').textContent = post.title
+  document.getElementById('post-meta').textContent =
+    `${post.users?.nickname ?? '알 수 없음'} · ${new Date(post.created_at).toLocaleString('ko-KR')}`
+  document.getElementById('post-content').textContent = post.content
+
+  // 본인 글이면 수정/삭제 버튼 표시
+  if (user && user.id === post.user_id) {
+    const actions = document.getElementById('post-actions')
+    actions.style.display = 'flex'
+    document.getElementById('btn-edit').onclick = () => location.href = `write.html?id=${id}`
+  }
+
+  window.handleDelete = async () => {
+    if (!confirm('정말 삭제하시겠습니까?')) return
+    try {
+      await deletePost(id)
+      location.href = 'board.html'
+    } catch (e) {
+      alert('삭제 실패: ' + e.message)
+    }
+  }
+</script>
+</body>
+</html>

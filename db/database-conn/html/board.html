@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>board</title>
+  <link rel="stylesheet" href="../css/board.css">
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>📋 게시판</h1>
+    <div class="header-right">
+      <span id="user-nickname" style="color:#555; font-size:0.9rem"></span>
+      <button class="btn-primary" onclick="location.href='write.html'">글쓰기</button>
+      <button class="btn-logout" onclick="handleLogout()">로그아웃</button>
+    </div>
+  </header>
+  <div class="post-list" id="post-list">
+    <p class="empty">불러오는 중...</p>
+  </div>
+</div>
+
+<script type="module">
+  import { getUser, signOut } from '../js/auth.js'
+  import { getPosts } from '../js/posts.js'
+
+  // 비로그인 시 index로
+  const user = await getUser()
+  if (!user) { location.href = 'index.html' }
+
+  // 닉네임 표시
+  const { supabase } = await import('../js/supabase.js')
+  const { data: profile } = await supabase.from('users').select('nickname').eq('id', user.id).single()
+  document.getElementById('user-nickname').textContent = profile?.nickname + '님'
+
+  // 게시글 목록 렌더링
+  const posts = await getPosts()
+  const listEl = document.getElementById('post-list')
+
+  if (posts.length === 0) {
+    listEl.innerHTML = '<p class="empty">아직 게시글이 없습니다</p>'
+  } else {
+    listEl.innerHTML = posts.map(post => `
+      <div class="post-item" onclick="location.href='post.html?id=${post.id}'">
+        <div>
+          <div class="post-title">${post.title}</div>
+          <div class="post-meta">${post.users?.nickname ?? '알 수 없음'}</div>
+        </div>
+        <div class="post-meta">${new Date(post.created_at).toLocaleDateString('ko-KR')}</div>
+      </div>
+    `).join('')
+  }
+
+  window.handleLogout = async () => {
+    await signOut()
+  }
+</script>
+</body>
+</html>

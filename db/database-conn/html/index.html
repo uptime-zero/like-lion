@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>로그인</title>
+  <link rel="stylesheet" href="../css/index.css">
+</head>
+<body>
+<div class="card">
+  <div class="tabs">
+    <div class="tab active" id="tab-login">로그인</div>
+    <div class="tab" id="tab-signup">회원가입</div>
+  </div>
+
+  <p class="error" id="error-msg"></p>
+
+  <div id="form-login">
+    <input type="email" id="login-email" placeholder="이메일" />
+    <input type="password" id="login-password" placeholder="비밀번호" />
+    <button class="btn-primary" id="btn-login">로그인</button>
+  </div>
+
+  <div id="form-signup" style="display:none">
+    <input type="text" id="signup-nickname" placeholder="닉네임" />
+    <input type="email" id="signup-email" placeholder="이메일" />
+    <input type="password" id="signup-password" placeholder="비밀번호 (6자 이상)" />
+    <button class="btn-primary" id="btn-signup">회원가입</button>
+  </div>
+</div>
+
+<script type="module">
+  import { signIn, signUp, getUser } from '../js/auth.js'
+
+  getUser().then(user => { if (user) location.href = 'board.html' })
+
+  function switchTab(tab) {
+    document.getElementById('form-login').style.display = tab === 'login' ? '' : 'none'
+    document.getElementById('form-signup').style.display = tab === 'signup' ? '' : 'none'
+    document.getElementById('tab-login').classList.toggle('active', tab === 'login')
+    document.getElementById('tab-signup').classList.toggle('active', tab === 'signup')
+  }
+
+  function showError(msg) {
+    const el = document.getElementById('error-msg')
+    el.textContent = msg
+    el.style.display = 'block'
+  }
+
+  document.getElementById('tab-login').addEventListener('click', () => switchTab('login'))
+  document.getElementById('tab-signup').addEventListener('click', () => switchTab('signup'))
+
+  document.getElementById('btn-login').addEventListener('click', async () => {
+    const email = document.getElementById('login-email').value
+    const password = document.getElementById('login-password').value
+    try {
+      await signIn(email, password)
+      location.href = 'board.html'
+    } catch (e) {
+      showError('이메일 또는 비밀번호가 올바르지 않습니다')
+    }
+  })
+
+  document.getElementById('btn-signup').addEventListener('click', async () => {
+  const nickname = document.getElementById('signup-nickname').value
+  const email = document.getElementById('signup-email').value
+  const password = document.getElementById('signup-password').value
+  try {
+    await signUp(email, password, nickname)
+    // ✅ 이메일 인증 없이 바로 게시판으로 이동
+    alert('가입 완료!')
+    location.href = 'board.html'
+  } catch (e) {
+    showError(e.message)
+  }
+})
+</script>
+</body>
+</html>
